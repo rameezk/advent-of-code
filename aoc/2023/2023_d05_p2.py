@@ -1,11 +1,13 @@
 from aoc.helper import download_input, submit_answer
 
 import re
+import time
 
 
 if __name__ == "__main__":
     download_input(2023, 5)
 
+    start = time.time()
     with open("./2023_d05.txt") as f:
         almanac = f.read().strip().split("\n\n")
 
@@ -81,4 +83,6 @@ if __name__ == "__main__":
 
     R = sorted(sp)[0][0]
     print(R)
+    end = time.time()
+    print((end - start) * 1000)
     # submit_answer(2023, 5, 2, R)
