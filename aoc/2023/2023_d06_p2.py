@@ -2,6 +2,8 @@ from aoc.helper import download_input, submit_answer
 
 import re
 
+import time
+
 
 def calculate_distance(total_time, time_pressed) -> int:
     assert time_pressed <= total_time
@@ -12,6 +14,8 @@ def calculate_distance(total_time, time_pressed) -> int:
 
 
 if __name__ == "__main__":
+    start = time.time()
+
     download_input(2023, 6)
 
     with open("./2023_d06.txt") as f:
@@ -44,5 +48,9 @@ if __name__ == "__main__":
 
     C = R - L + 1
     print(C)
+
+    end = time.time()
+
+    print((end - start) * 1000)
 
     # submit_answer(2023, 6, 2, C)
