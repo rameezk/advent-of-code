@@ -6,7 +6,7 @@ AOC_BASE_URL = "https://adventofcode.com"
 
 
 def _get_session_cookie() -> str:
-    session_cookie_file = Path(__file__).parent / ".." / ".session-cookie"
+    session_cookie_file = Path(__file__).parent / ".." / ".." / ".session-cookie"
 
     if not session_cookie_file.exists():
         raise Exception("session cookie file does not exist")

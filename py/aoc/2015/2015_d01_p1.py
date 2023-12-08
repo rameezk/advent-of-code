@@ -1,7 +1,7 @@
 from aoc.helper import download_input
 
 if __name__ == "__main__":
-    # download_input(2015, 1)
+    download_input(2015, 1)
 
     with open("./2015_d01.txt") as f:
         commands = f.read().strip()
