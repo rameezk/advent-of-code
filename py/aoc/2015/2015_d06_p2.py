@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
     #     instructions = """
     # turn on 0,0 through 0,0
-    # toggle 0,0 through 999,999
+    # possible_smudges 0,0 through 999,999
     #                """
     #     instructions = instructions.strip().splitlines()
 
