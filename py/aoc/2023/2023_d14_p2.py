@@ -5,6 +5,8 @@ from aoc.util import benchmark
 
 from functools import cache
 
+from math import floor
+
 
 @cache
 def move_rocks(path: str, reverse: bool = False) -> str:
@@ -15,7 +17,6 @@ def move_rocks(path: str, reverse: bool = False) -> str:
     return path
 
 
-@cache
 def tilt_north(dish):
     cw_dish = zip(*dish)
     cw_dish = ["".join(r) for r in cw_dish]
@@ -29,7 +30,6 @@ def tilt_north(dish):
     return moved_dish
 
 
-@cache
 def tilt_west(dish):
     n_dish = []
     for row in dish:
@@ -37,7 +37,6 @@ def tilt_west(dish):
     return tuple(n_dish)
 
 
-@cache
 def tilt_south(dish):
     cw_dish = zip(*dish)
     cw_dish = ["".join(r) for r in cw_dish]
@@ -51,7 +50,6 @@ def tilt_south(dish):
     return moved_dish
 
 
-@cache
 def tilt_east(dish):
     n_dish = []
     for row in dish:
@@ -97,11 +95,22 @@ O.#..O.#.#
     for row in raw_dish:
         dish = dish + (row,)
 
+    seen = {}
     cycles = 1000000000
     for c in range(1, cycles + 1):
         if c % 1000 == 0:
             print("cycle", c, "left", cycles - c)
         dish = cycle_dish(dish)
+        flattened_id = "".join([r for r in dish])
+        if flattened_id in seen:
+            start = seen[flattened_id]
+            cycle_len = c - start
+            more = start + (cycle_len * floor((cycles - start) / cycle_len))
+            for _ in range(cycles - more):
+                dish = cycle_dish(dish)
+            break
+        else:
+            seen[flattened_id] = c
 
     T = 0
     for r, mv in enumerate(dish[::-1], start=1):
