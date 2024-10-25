@@ -61,7 +61,6 @@ def count(rule_engine, ranges, workflow_id) -> int:
     return T
 
 
-
 @benchmark
 def run():
     download_input(2023, 19)

@@ -14,7 +14,7 @@ def _get_session_cookie() -> str:
     with open(session_cookie_file) as f:
         session_cookie = f.read()
 
-    return session_cookie
+    return session_cookie.strip()
 
 
 def download_input(year: int, day: int):
