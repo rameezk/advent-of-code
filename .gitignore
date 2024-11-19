@@ -1,3 +1,7 @@
 .session-cookie
 
 .clj-kondo
+
+inputs/*.txt
+
+out/
