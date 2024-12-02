@@ -1,15 +1,11 @@
-import pathlib
 from itertools import pairwise
 
-from aoc.helper import download_input, submit_answer
+from aoc.helper import AOC
 
-if __name__ == "__main__":
-    download_input(2024, 2)
 
-    input_file = pathlib.Path(__file__).parent.resolve() / "./2024_d02.txt"
-
-    with open(input_file) as f:
-        data = f.read().strip().splitlines()
+@AOC.puzzle(2024, 2, 1)
+def solve():
+    data = AOC.get_data().strip().splitlines()
 
     #     data = """7 6 4 2 1
     # 1 2 7 8 9
@@ -33,4 +29,8 @@ if __name__ == "__main__":
             continue
 
     print(safe_report_count)
-    submit_answer(2024, 2, 1, safe_report_count)
+    AOC.submit_answer(safe_report_count)
+
+
+if __name__ == "__main__":
+    solve()

@@ -1,7 +1,7 @@
 import pathlib
 from itertools import pairwise
 
-from aoc.helper import download_input, submit_answer
+from aoc.helper import AOC
 
 
 def is_safe(levels: list[int]) -> bool:
@@ -18,13 +18,9 @@ def is_safe_when_removing_a_level(levels: list[int]) -> bool:
     return False
 
 
-if __name__ == "__main__":
-    download_input(2024, 2)
-
-    input_file = pathlib.Path(__file__).parent.resolve() / "./2024_d02.txt"
-
-    with open(input_file) as f:
-        data = f.read().strip().splitlines()
+@AOC.puzzle(2024, 2, 2)
+def solve():
+    data = AOC.get_data().strip().splitlines()
 
     #     data = """7 6 4 2 1
     # 1 2 7 8 9
@@ -43,4 +39,8 @@ if __name__ == "__main__":
                 safe_report_count += 1
 
     print(safe_report_count)
-    submit_answer(2024, 2, 2, safe_report_count)
+    AOC.submit_answer(safe_report_count)
+
+
+if __name__ == "__main__":
+    solve()

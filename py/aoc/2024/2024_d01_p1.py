@@ -1,14 +1,9 @@
-from aoc.helper import download_input, submit_answer
+from aoc.helper import AOC
 
-import pathlib
 
-if __name__ == "__main__":
-    download_input(2024, 1)
-
-    input_file = pathlib.Path(__file__).parent.resolve() / "./2024_d01.txt"
-
-    with open(input_file) as f:
-        data = f.read().strip().splitlines()
+@AOC.puzzle(2024, 1, 1)
+def solve():
+    data = AOC.get_data().strip().splitlines()
 
     #     data = """3   4
     # 4   3
@@ -33,4 +28,8 @@ if __name__ == "__main__":
         T += abs(d1 - d2)
 
     print(T)
-    submit_answer(2024, 1, 1, T)
+    AOC.submit_answer(T)
+
+
+if __name__ == "__main__":
+    solve()
