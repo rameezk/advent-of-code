@@ -10,12 +10,12 @@ if __name__ == "__main__":
     with open(input_file) as f:
         data = f.read().strip().splitlines()
 
-#     data = """3   4
-# 4   3
-# 2   5
-# 1   3
-# 3   9
-# 3   3""".strip().splitlines()
+    #     data = """3   4
+    # 4   3
+    # 2   5
+    # 1   3
+    # 3   9
+    # 3   3""".strip().splitlines()
 
     L = []
     R = []
