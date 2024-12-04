@@ -35,6 +35,26 @@ def batch(
         yield seq[i : i + size]
 
 
+def adj(x: int, y: int, horizontal: bool = False):
+    """
+    Returns adjacent coords to x, y
+    :param x:
+    :param y:
+    :param horizontal: include horizontal adjacents
+    :return:
+    """
+    if horizontal:
+        for dx in [-1, 0, 1]:
+            for dy in [-1, 0, 1]:
+                if dx == dy == 0:
+                    continue
+                yield x + dx, y + dy
+    else:
+        for dxy in [-1, 1]:
+            yield x + dxy, y
+            yield x, y + dxy
+
+
 def benchmark(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
