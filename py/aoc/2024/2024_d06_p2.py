@@ -1,3 +1,6 @@
+import multiprocessing
+from functools import partial
+
 from aoc.helper import AOC
 from aoc.util import benchmark
 
@@ -24,18 +27,22 @@ def solve():
     guard_facing = "N"
     guard_position = get_starting_position(map_)
 
-    loop_count = 0
+    positions_to_check = []
     for row_i, row in enumerate(map_):
         for col_i, col in enumerate(row):
             if (row_i, col_i) == guard_position:
                 continue
             if col == "#":
                 continue
-            if detect_loop(map_, (row_i, col_i), guard_position, guard_facing):
-                loop_count += 1
+            positions_to_check.append((row_i, col_i))
 
-    print(loop_count)
-    AOC.submit_answer(loop_count)
+    fixed_detect_loop = partial(detect_loop, map_, guard_position, guard_facing)
+
+    with multiprocessing.Pool() as pool:
+        results = pool.map(fixed_detect_loop, positions_to_check)
+        loop_count = sum(results)
+        print(loop_count)
+        AOC.submit_answer(loop_count)
 
 
 def get_starting_position(map_):
@@ -47,7 +54,7 @@ def get_starting_position(map_):
         raise Exception("Cannot find starting position")
 
 
-def detect_loop(map_, obstacle_position, position, direction):
+def detect_loop(map_, position, direction, obstacle_position):
     path = set()
 
     while True:
