@@ -35,15 +35,15 @@ def batch(
         yield seq[i : i + size]
 
 
-def adj(x: int, y: int, horizontal: bool = False):
+def adj(pos: tuple[int, int], diagonal: bool = False):
     """
     Returns adjacent coords to x, y
-    :param x:
-    :param y:
-    :param horizontal: include horizontal adjacents
+    :param pos: tuple of x, y coords
+    :param diagonal: include diagonal adjacents
     :return:
     """
-    if horizontal:
+    x, y = pos
+    if diagonal:
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
                 if dx == dy == 0:
