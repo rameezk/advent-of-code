@@ -1,6 +1,4 @@
 from aoc.helper import AOC
-from aoc.util import adj
-from collections import defaultdict
 
 
 @AOC.puzzle(2025, 6, 2)
