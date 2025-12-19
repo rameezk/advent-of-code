@@ -1,22 +1,32 @@
-from aoc.helper import download_input, submit_answer
+from aoc.helper import AOC
 
+@AOC.puzzle(2017, 3, 1)
+def solve():
+    data = AOC.get_data().strip()
 
-def get_pos(n: int) -> (int, int):
-    if n == 0:
-        raise RuntimeError("Cannot be bro")
+    n = int(data)
 
     if n == 1:
-        return 0, 0
+        AOC.submit_answer(0)
+        return
 
-    d, r = divmod(n, 9)
-    print(d, r)
+    layer = 0
+    max_in_layer = 1
+    while max_in_layer < n:
+        layer += 1
+        max_in_layer = (2 * layer + 1) ** 2
 
-    return 0, 0
+    side_length = 2 * layer + 1
+    min_in_layer = (2 * (layer - 1) + 1) ** 2 + 1
 
+    pos_in_layer = n - min_in_layer
+    side_pos = pos_in_layer % (side_length - 1)
 
-def manhattan_distance(x: int, y: int) -> int:
-    return abs(x) + abs(y)
+    offset_from_middle = abs(side_pos - (layer - 1))
 
+    answer = layer + offset_from_middle
+
+    AOC.submit_answer(answer)
 
 if __name__ == "__main__":
-    print(get_pos(23))
+    solve()
