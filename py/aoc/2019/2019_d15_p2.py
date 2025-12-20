@@ -1,0 +1,166 @@
+from aoc.helper import AOC
+from collections import deque
+
+
+class IntcodeComputer:
+    def __init__(self, program):
+        self.memory = {i: val for i, val in enumerate(program)}
+        self.pos = 0
+        self.relative_base = 0
+        self.halted = False
+
+    def get_value(self, offset, mode):
+        param = self.memory.get(self.pos + offset, 0)
+        if mode == 0:
+            return self.memory.get(param, 0)
+        elif mode == 1:
+            return param
+        elif mode == 2:
+            return self.memory.get(self.relative_base + param, 0)
+
+    def get_addr(self, offset, mode):
+        param = self.memory.get(self.pos + offset, 0)
+        if mode == 0:
+            return param
+        elif mode == 2:
+            return self.relative_base + param
+
+    def run(self, inputs):
+        input_idx = 0
+        outputs = []
+
+        while True:
+            instruction = self.memory.get(self.pos, 0)
+            opcode = instruction % 100
+            mode1 = (instruction // 100) % 10
+            mode2 = (instruction // 1000) % 10
+            mode3 = (instruction // 10000) % 10
+
+            if opcode == 99:
+                self.halted = True
+                return outputs
+
+            if opcode == 1:
+                a = self.get_value(1, mode1)
+                b = self.get_value(2, mode2)
+                out_pos = self.get_addr(3, mode3)
+                self.memory[out_pos] = a + b
+                self.pos += 4
+            elif opcode == 2:
+                a = self.get_value(1, mode1)
+                b = self.get_value(2, mode2)
+                out_pos = self.get_addr(3, mode3)
+                self.memory[out_pos] = a * b
+                self.pos += 4
+            elif opcode == 3:
+                if input_idx >= len(inputs):
+                    return outputs
+                out_pos = self.get_addr(1, mode1)
+                self.memory[out_pos] = inputs[input_idx]
+                input_idx += 1
+                self.pos += 2
+            elif opcode == 4:
+                a = self.get_value(1, mode1)
+                outputs.append(a)
+                self.pos += 2
+            elif opcode == 5:
+                a = self.get_value(1, mode1)
+                b = self.get_value(2, mode2)
+                if a != 0:
+                    self.pos = b
+                else:
+                    self.pos += 3
+            elif opcode == 6:
+                a = self.get_value(1, mode1)
+                b = self.get_value(2, mode2)
+                if a == 0:
+                    self.pos = b
+                else:
+                    self.pos += 3
+            elif opcode == 7:
+                a = self.get_value(1, mode1)
+                b = self.get_value(2, mode2)
+                out_pos = self.get_addr(3, mode3)
+                self.memory[out_pos] = 1 if a < b else 0
+                self.pos += 4
+            elif opcode == 8:
+                a = self.get_value(1, mode1)
+                b = self.get_value(2, mode2)
+                out_pos = self.get_addr(3, mode3)
+                self.memory[out_pos] = 1 if a == b else 0
+                self.pos += 4
+            elif opcode == 9:
+                a = self.get_value(1, mode1)
+                self.relative_base += a
+                self.pos += 2
+
+
+@AOC.puzzle(2019, 15, 2)
+def solve():
+    data = AOC.get_data().strip()
+
+    program = list(map(int, data.split(',')))
+
+    directions = {
+        1: (0, -1),
+        2: (0, 1),
+        3: (-1, 0),
+        4: (1, 0)
+    }
+
+    queue = deque([(0, 0, IntcodeComputer(program))])
+    visited = {(0, 0)}
+    open_spaces = {(0, 0)}
+    oxygen_pos = None
+
+    while queue:
+        x, y, computer = queue.popleft()
+
+        for dir_cmd, (dx, dy) in directions.items():
+            nx, ny = x + dx, y + dy
+
+            if (nx, ny) in visited:
+                continue
+
+            test_computer = IntcodeComputer(program)
+            test_computer.memory = computer.memory.copy()
+            test_computer.pos = computer.pos
+            test_computer.relative_base = computer.relative_base
+
+            output = test_computer.run([dir_cmd])
+            status = output[0]
+
+            if status == 0:
+                visited.add((nx, ny))
+            elif status == 1:
+                visited.add((nx, ny))
+                open_spaces.add((nx, ny))
+                queue.append((nx, ny, test_computer))
+            elif status == 2:
+                visited.add((nx, ny))
+                open_spaces.add((nx, ny))
+                oxygen_pos = (nx, ny)
+                queue.append((nx, ny, test_computer))
+
+    queue = deque([(oxygen_pos, 0)])
+    filled = {oxygen_pos}
+    max_time = 0
+
+    while queue:
+        pos, time = queue.popleft()
+        max_time = max(max_time, time)
+        x, y = pos
+
+        for dx, dy in [(0, -1), (0, 1), (-1, 0), (1, 0)]:
+            nx, ny = x + dx, y + dy
+            if (nx, ny) in open_spaces and (nx, ny) not in filled:
+                filled.add((nx, ny))
+                queue.append(((nx, ny), time + 1))
+
+    answer = max_time
+    print(answer)
+    AOC.submit_answer(answer)
+
+
+if __name__ == "__main__":
+    solve()
